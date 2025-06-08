@@ -19,7 +19,8 @@
   },
   "homepage": "https://github.com/5omewhat-0f-a-l0ser/se_project_express#readme",
   "dependencies": {
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "mongoose": "^8.15.1"
   },
   "devDependencies": {
     "eslint": "^8.57.1",
