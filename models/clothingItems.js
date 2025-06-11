@@ -11,5 +11,7 @@ const clothingSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  
+
 })
+
+module.exports = mongoose.model("clothingItem", clothingSchema);
