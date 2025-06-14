@@ -12,6 +12,7 @@ const getUsers = (req, res) => {
 
 const createUser = (req, res) => {
   const { name, avatar } = req.body;
+
   User.create({ name, avatar })
   .then((user) => res.status(201).send(user))
   .catch((err) =>{
@@ -26,6 +27,7 @@ const createUser = (req, res) => {
 const getUser = (req, res) => {
   const { userId } = req.params;
   user.findById(userId)
+  .orFail()
   .then((user) => res.status(200).send(user))
   .catch ((err) => {
     if (err.name === "") {
@@ -34,4 +36,5 @@ const getUser = (req, res) => {
     return res.status(500).send({ message: err.message});
   });
 };
+
 module.exports = { getUsers, createUser, getUser };

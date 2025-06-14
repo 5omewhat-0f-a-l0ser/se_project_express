@@ -5,6 +5,8 @@ const clothingRouter = require("./routes/clothingitems");
 const mainRouter = require("./routes/index")
 const app = express();
 
+app.use(express.json());
+
 const { PORT = 3001 } = process.env;
 
 mongoose
