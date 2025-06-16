@@ -1,7 +1,7 @@
-const Clothing = require("../models/clothingItems");
+const ClothingItem = require("../models/clothingItems");
 
 const getClothingItems = (req, res) => {
-  Clothing.find({})
+  ClothingItem.find({})
   .then((items) => res.status(200).send(items))
   .catch((err) => {
     console.error(err);
@@ -10,8 +10,8 @@ const getClothingItems = (req, res) => {
 
 const createClothingItem = (req, res) => {
   const { name, weather, imageURL } = req.body;
- Clothing.create({ name, weather, imageURL })
-   .then((items) => res.status(201).send(items))
+ ClothingItem.create({ name, weather, imageURL })
+   .then((item) => res.status(201).send({data:item}))
    .catch((err) =>{
      console.error(err);
      if (err.name === "ValidationError") {
@@ -21,10 +21,28 @@ const createClothingItem = (req, res) => {
    });
 };
 
+const updateClothingItems = (req,res) => {
+  const {itemId} = req.params;
+  const {imageURL} = req.body;
+  console.log(itemId, imageURL)
+    ClothingItem.findByIdAndUpdate(itemId, {$set: {imageUrl}})
+  .orFail()
+  .then((item) => res.status(200).send({data:item}))
+  .catch((err) => {
+    return res.status(500).send({ message: err.message });
+  })
+};
+
 const deleteClothingItem = (req, res) => {
   const { itemId } = req.params;
 
+  console.log(itemId);
+  ClothingItem.findByIdAndDelete(itemId)
+  .orFail()
+  .then((item) => res.status(204).send({}))
+  .catch((err) => {
+   return res.status(500).send({ message: err.message });
+  })
+};
 
-}
-
-module.exports = { getClothingItems, createClothingItem }
+module.exports = { getClothingItems, createClothingItem, deleteClothingItem, updateClothingItems }
