@@ -1,9 +1,9 @@
-class Error500 extends Error {
+class InternalError extends Error {
   constructor(message) {
     super(message);
-    this.name = "Error500";
+    this.name = "InternalError";
     this.statusCode = 500;
   }
 }
 
-module.exports = Error500;
+module.exports = InternalError;

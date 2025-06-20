@@ -20,6 +20,19 @@ const clothingSchema = new mongoose.Schema({
       message: "Link is not valid",
     },
   },
+  owner: {
+    type: String,
+    required: true,
+  },
+  likes: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: String,
+    required: true,
+  }
+
 });
 
 module.exports = mongoose.model("clothingItem", clothingSchema);

@@ -1,7 +1,7 @@
 const User = require("../models/users");
-const Error400 = require("../utils/Error400");
-const Error500 = require("../utils/Error500");
-const Error404 = require("../utils/Error404");
+const BadRequestError = require("../utils/Error400");
+const InternalError = require("../utils/Error500");
+const NotFoundError = require("../utils/Error404");
 //GET /users
 
 const getUsers = (req, res) => {
@@ -19,10 +19,13 @@ const createUser = (req, res) => {
   .then((user) => res.status(201).send(user))
   .catch((err) =>{
     console.error(err);
-    if (err.name === "ValidationError") {
-      return res.status(Error400).send({ message: "Bad Request: Turns out, the server did not like that." });
+    if (err.name === "BadRequestError") {
+      return res.status(BadRequestError).send({ message: "Bad Request: Turns out, the server did not like that." });
     }
-    return res.status(Error500).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
+    if (err.name === "NotFoundError") {
+      return res.status(NotFoundError).send({ message: "Not Found: Um, you sure this"})
+    }
+    return res.status(InternalError).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
   });
 };
 
@@ -33,9 +36,9 @@ const getUser = (req, res) => {
   .then((user) => res.status(200).send(user))
   .catch ((err) => {
     if (err.name === "NotFoundError") {
-      return res.status(Error404).send({ message: "Not Found: Boss, this user couldn't be found"});
+      return res.status(NotFoundError).send({ message: "Not Found: Boss, this user couldn't be found"});
     }
-    return res.status(Error500).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
+    return res.status(InternalError).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
   });
 };
 

@@ -5,7 +5,7 @@ const {
   dislikeItem
 } = require("../controllers/likes");
 
-router.get("/", likeItem);
+router.put("/", likeItem);
 router.delete("/:itemId", dislikeItem);
 
 module.exports = router;
