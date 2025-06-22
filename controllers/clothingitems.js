@@ -14,18 +14,18 @@ const getClothingItems = (req, res) => {
   });
 };
 
-const createClothingItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
- ClothingItem.create({ name, weather, imageUrl })
-   .then((item) => res.status(201).send({data:item}))
-   .catch((err) =>{
-     console.error(err);
-     if (err.name === "ValidationError") {
-      return res.status(BadRequestError).send({ message: "Bad Request: Turns out, the server did not like that." });
-    }
-    return res.status(InternalError).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
-  });
-};
+  const owner = req.user._id;
+  clothingItem
+    .create({ name, weather, imageUrl, owner })
+    .then((item) => res.status(201).send(item))
+    .catch((err) => {
+      console.error(err);
+      if (err.name === "ValidationError") {
+        return res.status(BadRequestError).send({ message: "Bad Request: Turns out, the server did not like that." });
+      }
+      return res.status(InternalError).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
+    });
 
 //videos had us do an Update controller and I find out, we don't need it!?
 

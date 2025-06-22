@@ -1,6 +1,8 @@
 const ClothingItem = require("../models/clothingItems");
 const BadRequestError = require("../utils/Error400");
 const NotFoundError = require("../utils/Error404");
+const SuccessReturn = require("../utils/Status200");
+
 
 const likeItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(
@@ -9,7 +11,7 @@ const likeItem = (req, res) => {
     { new: true },
   )
   .orFail()
-  .then((item) => res.status(200).send(item))
+  .then((item) => res.status(SuccessReturn).send(item))
   .catch((err) => {
     console.error(`Error ${err.name} with the message $:err.message`);
      if (err.name === "NotFoundError") {
@@ -29,7 +31,7 @@ const dislikeItem = (req, res) => {
     { new: true },
   )
   .orFail()
-  .then((item) => res.status(200).send(item))
+  .then((item) => res.status(SuccessReturn).send(item))
   .catch((err) => {
     console.error(`Error ${err.name} with the message $:err.message`);
      if (err.name === "NotFoundError") {
