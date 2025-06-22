@@ -25,7 +25,7 @@ const createUser = (req, res) => {
     if (err.name === "BadRequestError") {
       return res.status(BadRequestError).send({ message: "Bad Request: Turns out, the server did not like that." });
     }
-    if (err.name === "NotFoundError") {
+    if (err.name === "DocumentNotFoundError") {
       return res.status(NotFoundError).send({ message: "Not Found: Um, you sure this"})
     }
     return res.status(InternalError).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
@@ -38,7 +38,7 @@ const getUser = (req, res) => {
   .orFail()
   .then((user) => res.status(SuccessReturn).send(user))
   .catch ((err) => {
-    if (err.name === "NotFoundError") {
+    if (err.name === "DocumentNotFoundError") {
       return res.status(NotFoundError).send({ message: "Not Found: Boss, this user couldn't be found"});
     }
     return res.status(InternalError).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });

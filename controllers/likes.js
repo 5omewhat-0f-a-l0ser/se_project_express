@@ -14,7 +14,7 @@ const likeItem = (req, res) => {
   .then((item) => res.status(SuccessReturn).send(item))
   .catch((err) => {
     console.error(`Error ${err.name} with the message $:err.message`);
-     if (err.name === "NotFoundError") {
+     if (err.name === "DocumentNotFoundError") {
       return res.status(NotFoundError).send({ message: "Not Found: Boss, this user couldn't be found"});
     }
     if (err.name === "BadRequestError") {
@@ -34,7 +34,7 @@ const dislikeItem = (req, res) => {
   .then((item) => res.status(SuccessReturn).send(item))
   .catch((err) => {
     console.error(`Error ${err.name} with the message $:err.message`);
-     if (err.name === "NotFoundError") {
+     if (err.name === "DocumentNotFoundError") {
       return res.status(NotFoundError).send({ message: "Not Found: Boss, this user couldn't be found"});
     }
     if (err.name === "BadRequestError") {
