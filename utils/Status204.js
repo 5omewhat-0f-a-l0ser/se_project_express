@@ -1,6 +1,5 @@
-class NoContentReturn extends Error {
-  constructor(message) {
-    super(message);
+class NoContentReturn {
+  constructor() {
     this.name = "No-Content";
     this.statusCode = 204;
   }

@@ -1,6 +1,5 @@
-class CreationReturn extends Error {
-  constructor(message) {
-    super(message);
+class CreationReturn {
+  constructor() {
     this.name = "Created";
     this.statusCode = 201;
   }

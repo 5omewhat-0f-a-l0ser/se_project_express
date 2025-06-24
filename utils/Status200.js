@@ -1,6 +1,5 @@
-class SuccessReturn extends Error {
-  constructor(message) {
-    super(message);
+class SuccessReturn {
+  constructor() {
     this.name = "Successful";
     this.statusCode = 200;
   }
