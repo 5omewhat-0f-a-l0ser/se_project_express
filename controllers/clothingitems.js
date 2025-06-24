@@ -35,11 +35,15 @@ const createClothingItem = (req, res) => {
 
 const deleteClothingItem = (req, res) => {
   const { itemId } = req.params;
-
   console.log(itemId);
+
   ClothingItem.findByIdAndDelete(itemId)
+  .orFail(() => {
+    const error = new Error("Item ID not found");
+    error.statusCode = 404;
+    throw error;
+})
   .then((item) => res.status(SuccessReturn).send({ message: "Success!" }))
-  .orFail()
   .catch(() => {
     return res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
   })

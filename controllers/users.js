@@ -9,7 +9,7 @@ const CreationReturn = require("../utils/Status201");
 
 const getUsers = (req, res) => {
   User.find({})
-    .then((users) => res.send(users))
+  .then((users) => res.send(users))
  .catch(() => {
   return res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
  })
@@ -35,7 +35,11 @@ const createUser = (req, res) => {
 const getUser = (req, res) => {
   const { userId } = req.params;
   user.findById(userId)
-  .orFail()
+  .orFail(() => {
+    const error = new Error("Item ID not found");
+    error.statusCode = 404;
+    throw error;
+  })
   .then((user) => res.status(SuccessReturn).send(user))
   .catch ((err) => {
     if (err.name === "ValidationError") {
