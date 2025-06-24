@@ -2,9 +2,9 @@
 WTWR's backend server to the site What to Wear (WTWR). THis server holds an assortment of information related to that site.
 
 ## Techs used
-Node.js
-Express.js
-MongoDB with Mongoose
+* Node.js
+* Express.js
+* MongoDB with Mongoose
 
 ### Running the Project
 `npm run start` — to launch the server 
