@@ -5,7 +5,7 @@ const userRouter = require("./users");
 const clothingRouter = require("./clothingitems");
 
 
-const NOT_FOUND = require("../utils/Errors");
+const {NOT_FOUND} = require("../utils/Errors");
 
 const likeRouter = require("./likes")
 
