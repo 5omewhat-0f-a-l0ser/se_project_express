@@ -5,9 +5,7 @@ const { DEFAULT, BAD_REQUEST, NOT_FOUND} = require("../utils/Errors");
 const getUsers = (req, res) => {
   User.find({})
   .then((users) => res.send(users))
- .catch(() =>{
-  return res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
- })
+ .catch(() =>res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" }))
 };
 
 const createUser = (req, res) => {
