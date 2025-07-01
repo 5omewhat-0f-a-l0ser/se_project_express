@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
+
 
 const clothingSchema = new mongoose.Schema({
   name: {
@@ -16,7 +18,7 @@ const clothingSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please enter a valid URL"],
     validate: {
-      // validator: (v) => validator.isURL(v),
+      validator: (v) => validator.isURL(v),
       message: "Link is not valid",
     },
   },

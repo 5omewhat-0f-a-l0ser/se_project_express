@@ -8,7 +8,7 @@ const getClothingItems = (req, res) => {
   ClothingItem.find({})
   .then((items) => res.status(200).send(items))
   .catch((err) => {
-    if (err.name === "CastError") {
+    if (err.name === "ValidationError") {
       return res.status(BAD_REQUEST).send({ message: "Bad Request: Turns out, the server did not like that." });
     }
     return res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
@@ -37,10 +37,13 @@ const deleteClothingItem = (req, res) => {
 
   ClothingItem.findByIdAndDelete(itemId)
   .orFail()
-  .then(() => res.status(200).send())
+  .then(() => res.status(200).send({message: "You got it! I'll get this out of your way!"}))
   .catch((err) => {
-   if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
+    if (err.name === "DocumentNotFoundError") {
+      return res.status(NOT_FOUND).send({ message: "Not Found: Boss, this user couldn't be found"});
+    }
+   if (err.name === "ValidationError") {
+      return res.status(BAD_REQUEST).send({ message: err.message });
     }
     return res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
   })

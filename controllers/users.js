@@ -15,7 +15,7 @@ const createUser = (req, res) => {
   .then((user) => res.status(201).send(user))
   .catch((err) =>{
     console.error(`Error ${err.name} with the message $:err.message`);
-    if (err.name === "CastError") {
+    if (err.name === "ValidationError") {
       return res.status(BAD_REQUEST).send({ message: "Bad Request: Turns out, the server did not like that." });
     }
     if (err.name === "DocumentNotFoundError") {
@@ -31,7 +31,7 @@ const getUser = (req, res) => {
   .orFail()
   .then((user) => res.status(200).send(user))
   .catch ((err) =>{
-    if (err.name === "CastError") {
+    if (err.name === "ValidationError") {
       return res.status(BAD_REQUEST).send({ message: "Bad Request: Turns out, the server did not like that." });
     }
     if (err.name === "DocumentNotFoundError") {
