@@ -31,7 +31,7 @@ const getUser = (req, res) => {
   .orFail()
   .then((user) => res.status(200).send(user))
   .catch ((err) =>{
-    if (err.name === "ValidationError") {
+    if (err.name === "CastError") {
       return res.status(BAD_REQUEST).send({ message: "Bad Request: Turns out, the server did not like that." });
     }
     if (err.name === "DocumentNotFoundError") {

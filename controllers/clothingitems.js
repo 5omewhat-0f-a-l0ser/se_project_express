@@ -1,5 +1,5 @@
 const ClothingItem = require("../models/clothingItems");
-const { DEFAULT, BAD_REQUEST} = require("../utils/Errors");
+const { DEFAULT, BAD_REQUEST, NOT_FOUND} = require("../utils/Errors");
 // const SuccessReturn = require("../utils/Status200");
 // const CreationReturn = require("../utils/Status201");
 // const NoContentReturn = require("../utils/Status204");
@@ -24,7 +24,7 @@ const createClothingItem = (req, res) => {
     .then((item) => res.status(201).send(item))
     .catch((err) => {
       console.error(err);
-      if (err.name === "CastError") {
+      if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({ message: err.message });
       }
       return res.status(DEFAULT).send({ message: err.message });
@@ -42,7 +42,7 @@ const deleteClothingItem = (req, res) => {
     if (err.name === "DocumentNotFoundError") {
       return res.status(NOT_FOUND).send({ message: "Not Found: Boss, this user couldn't be found"});
     }
-   if (err.name === "ValidationError") {
+   if (err.name === "CastError") {
       return res.status(BAD_REQUEST).send({ message: err.message });
     }
     return res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
