@@ -1,5 +1,5 @@
 const User = require("../models/users");
-const { DEFAULT, BAD_REQUEST, NOT_FOUND} = require("../utils/Errors");
+const { DEFAULT, BAD_REQUEST, NOT_FOUND, CONFLICT, DUPLICATE } = require("../utils/Errors");
 // GET /users
 
 const getUsers = (req, res) => {
@@ -9,18 +9,27 @@ const getUsers = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name, avatar } = req.body;
+  const { name, avatar, email, password } = req.body;
+  // project 13
+  if (!email) {
+  return res.status(BAD_REQUEST).send({message: "missing email, please add one"})
+  }
+  if (!password) {
+    return res.status(BAD_REQUEST).send({message: "missing password, please add one"})
+  }
 
-  User.create({ name, avatar })
+  User.create({ name, avatar, email, password })
   .then((user) => res.status(201).send(user))
   .catch((err) =>{
     console.error(`Error ${err.name} with the message $:err.message`);
     if (err.name === "ValidationError") {
       return res.status(BAD_REQUEST).send({ message: "Bad Request: Turns out, the server did not like that." });
     }
-    if (err.name === "DocumentNotFoundError") {
-      return res.status(NOT_FOUND).send({ message: "Not Found: Um, you sure this exists?"})
+    // project 13
+    if (err.name === DUPLICATE) {
+      return res.status(CONFLICT).send({message: "Conflict: Hmm... Something's not right here..."})
     }
+
     return res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
   });
 };
@@ -39,6 +48,22 @@ const getUser = (req, res) => {
     }
     return res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
   });
+};
+
+// project 13
+const login = (req, res) => {
+  const { email, password} = req.body;
+  if (!email || !password) {
+    return res.status(BAD_REQUEST).send({message: "A valid Email and Password is needed"});
+  }
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+        expiresIn: "7d",
+      });
+      res.send({ token });
+    })
+    .catch()
 };
 
 
