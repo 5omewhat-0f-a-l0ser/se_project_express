@@ -4,11 +4,13 @@ const DEFAULT = 500;
 // project 13
 const CONFLICT = 409;
 const DUPLICATE = 11000;
+const UNAUTHORIZED = 401;
 
 module.exports = {
   BAD_REQUEST,
   NOT_FOUND,
   DEFAULT,
   CONFLICT,
-  DUPLICATE
+  DUPLICATE,
+  UNAUTHORIZED
 }

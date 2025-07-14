@@ -17,4 +17,7 @@ router.use("/items", likeRouter);
 
 router.use((req, res) => res.status(NOT_FOUND).send({ message: "Not Found: Um, you sure this exists?" }));
 
+app.post('/signin', login);
+app.post('/signup', createUser);
+
 module.exports = router;

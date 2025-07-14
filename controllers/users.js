@@ -1,5 +1,10 @@
+const jwt = require("jsonwebtoken");
 const User = require("../models/users");
-const { DEFAULT, BAD_REQUEST, NOT_FOUND, CONFLICT, DUPLICATE } = require("../utils/Errors");
+const { DEFAULT, BAD_REQUEST, NOT_FOUND, CONFLICT, DUPLICATE, UNAUTHORIZED } = require("../utils/Errors");
+// Project 13
+
+const { JWT_SECRET } = require("../utils/config");
+
 // GET /users
 
 const getUsers = (req, res) => {
@@ -57,14 +62,29 @@ const login = (req, res) => {
     return res.status(BAD_REQUEST).send({message: "A valid Email and Password is needed"});
   }
   return User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
-        expiresIn: "7d",
-      });
-      res.send({ token });
-    })
-    .catch()
-};
+  .then((user) => {
+    const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+      expiresIn: "7d",
+    });
+    res.send({ token });
+  })
+  .catch((err) =>{
+    console.error(`Error ${err.name} with the message ${err.message}`);
+      if (err.message === "incorrect email or password") {
+        return res.status(UNAUTHORIZED).send({message: "Incorrect email or password, please try again."});
+      }
+      if (err.name === "CastError") {
+        return res.status(BAD_REQUEST).send({ message: "Bad Request: Turns out, the server did not like that." });
+      }
+      if (err.name === "DocumentNotFoundError") {
+        return res.status(NOT_FOUND).send({ message: "Not Found: Boss, this user couldn't be found"});
+      }
+      if (err.name === DUPLICATE) {
+        return res.status(CONFLICT).send({message: "Conflict: Hmm... Something's not right here..."})
+      }
+     return res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
+  });
+}
 
 
 module.exports = { getUsers, createUser, getUser };
