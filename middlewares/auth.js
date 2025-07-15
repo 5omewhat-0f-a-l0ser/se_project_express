@@ -1,6 +1,22 @@
 // project 13
 
-const token = authorization.replace("Bearer ", "");
+// const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
+const { UNAUTHORIZED } = require("../utils/Errors");
 
-payload = jwt.verify(token, JWT_SECRET);
+module.exports = (req, res) => {
+  const { authorization } = req.headers;
+   if (!authorization || !authorization.startsWith("Bearer ")) {
+    return res.status(UNAUTHORIZED).send({message: "Authorization failed"});
+  }
+  const token = authorization.replace("Bearer ", "");
+  let payload;
+  try {
+    payload = jwt.verify(token, JWT_SECRET);
+  }
+  catch (err) {
+    return res.status(UNAUTHORIZED).send({message: "Token invalid"});
+  }
+  req.user = payload;
+  return next();
+};

@@ -1,9 +1,8 @@
-const jwt = require("jsonwebtoken");
+const bycrypt = require("bycryptjs");
+// const jwt = require("jsonwebtoken");
 const User = require("../models/users");
 const { DEFAULT, BAD_REQUEST, NOT_FOUND, CONFLICT, DUPLICATE, UNAUTHORIZED } = require("../utils/Errors");
 // Project 13
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
 
 // GET /users
@@ -11,7 +10,7 @@ const { JWT_SECRET } = require("../utils/config");
 const getUsers = (req, res) => {
   User.find({})
   .then((users) => res.send(users))
- .catch(() =>res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" }))
+ .catch(() => res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" }))
 };
 
 const createUser = (req, res) => {

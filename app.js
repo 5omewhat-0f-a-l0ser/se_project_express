@@ -1,6 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const mainRouter = require("./routes/index");
+
+
+
 
 const app = express();
 
@@ -15,7 +19,7 @@ mongoose
   })
   .catch((e) => console.error(e));
 
-
+app.use(cors());
 
 app.use(express.json());
 app.use("/", mainRouter);
