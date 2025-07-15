@@ -4,6 +4,7 @@ const userRouter = require("./users");
 
 const clothingRouter = require("./clothingitems");
 
+const { login, createUser } = require("../controllers/users");
 
 const {NOT_FOUND} = require("../utils/Errors");
 
@@ -17,7 +18,7 @@ router.use("/items", likeRouter);
 
 router.use((req, res) => res.status(NOT_FOUND).send({ message: "Not Found: Um, you sure this exists?" }));
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+router.post('/signin', login);
+router.post('/signup', createUser);
 
 module.exports = router;

@@ -2,7 +2,8 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/users");
 const { DEFAULT, BAD_REQUEST, NOT_FOUND, CONFLICT, DUPLICATE, UNAUTHORIZED } = require("../utils/Errors");
 // Project 13
-
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
 
 // GET /users
@@ -22,9 +23,13 @@ const createUser = (req, res) => {
   if (!password) {
     return res.status(BAD_REQUEST).send({message: "missing password, please add one"})
   }
-
-  User.create({ name, avatar, email, password })
-  .then((user) => res.status(201).send(user))
+User.findOne({ email }).select('+password')
+ .then(()=> bycrypt.hash(password, 10))
+  .then((hash) => User.create({ name, avatar, email, password:hash }))
+  .then((user) => {
+    delete user.password;
+    res.status(201).send(user)
+  })
   .catch((err) =>{
     console.error(`Error ${err.name} with the message $:err.message`);
     if (err.name === "ValidationError") {
@@ -39,8 +44,8 @@ const createUser = (req, res) => {
   });
 };
 
-const getUser = (req, res) => {
-  const { userId } = req.params;
+const getCurrentUser = (req, res) => {
+  const { userId } = req.user;
   User.findById(userId)
   .orFail()
   .then((user) => res.status(200).send(user))
@@ -57,7 +62,7 @@ const getUser = (req, res) => {
 
 // project 13
 const login = (req, res) => {
-  const { email, password} = req.body;
+  const { email, password } = req.body;
   if (!email || !password) {
     return res.status(BAD_REQUEST).send({message: "A valid Email and Password is needed"});
   }
@@ -68,7 +73,7 @@ const login = (req, res) => {
     });
     res.send({ token });
   })
-  .catch((err) =>{
+  .catch((err) => {
     console.error(`Error ${err.name} with the message ${err.message}`);
       if (err.message === "incorrect email or password") {
         return res.status(UNAUTHORIZED).send({message: "Incorrect email or password, please try again."});
@@ -84,7 +89,26 @@ const login = (req, res) => {
       }
      return res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
   });
-}
+};
 
+const updateUser = (req, res) => {
+  const { name, avatar } = req.body;
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, avatar },
+    { new: true }
+  )
+  .orFail()
+  .then((user) => res.status(200).send(user))
+  .catch((err) => {
+    if (err.name === "ValidationError") {
+      return res.status(BAD_REQUEST).send({ message: "Bad Request: Turns out, the server did not like that." });
+    }
+    if (err.name === "DocumentNotFoundError") {
+      return res.status(NOT_FOUND).send({ message: "Not Found: Boss, this user couldn't be found"});
+    }
+    return  res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
+  });
+};
 
-module.exports = { getUsers, createUser, getUser };
+module.exports = { getUsers, createUser, getCurrentUser, login, updateUser };
