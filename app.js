@@ -25,6 +25,6 @@ app.use(express.json());
 app.use("/", mainRouter);
 
 
-app.listen(3001, () => {
+app.listen(PORT, () => {
   console.log(`Listening on ${PORT}`);
 });

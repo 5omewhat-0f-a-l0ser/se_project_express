@@ -1,12 +1,9 @@
 const ClothingItem = require("../models/clothingItems");
-const { DEFAULT, BAD_REQUEST, NOT_FOUND} = require("../utils/Errors");
-// const SuccessReturn = require("../utils/Status200");
-// const CreationReturn = require("../utils/Status201");
-// const NoContentReturn = require("../utils/Status204");
+const { DEFAULT, BAD_REQUEST, NOT_FOUND, FORBIDDEN} = require("../utils/Errors");
 
 const getClothingItems = (req, res) => {
   ClothingItem.find({})
-  .then((items) => res.status(200).send(items))
+  .then((items) => res.status({ data }).send(items))
   .catch((err) => {
     if (err.name === "ValidationError") {
       return res.status(BAD_REQUEST).send({ message: "Bad Request: Turns out, the server did not like that." });
@@ -35,9 +32,18 @@ const createClothingItem = (req, res) => {
 const deleteClothingItem = (req, res) => {
   const { itemId } = req.params;
 
-  ClothingItem.findByIdAndDelete(itemId)
+  ClothingItem.findById(req.params, itemId)
   .orFail()
-  .then(() => res.status(200).send({message: "You got it! I'll get this out of your way!"}))
+  .then((item) => {
+     if (!item) {
+        return res.status(NOT_FOUND).json({ message: "Item not found" });
+      }
+      if (item.owner.toString() !== req.user._id) {
+        return res.status(FORBIDDEN).json({ message: "Access denied" });
+      }
+      return ClothingItem.deleteOne({ _id: req.params.itemId });
+  })
+  // Is that how I'm supossed to do this?
   .catch((err) => {
     if (err.name === "DocumentNotFoundError") {
       return res.status(NOT_FOUND).send({ message: "Not Found: Boss, this user couldn't be found"});

@@ -12,11 +12,11 @@ router.use("/users", userRouter);
 
 router.use("/items", clothingRouter);
 
-router.use("/items", clothingRouter);
+router.post('/signin', login);
+router.post('/signup', createUser);
+
 
 router.use((req, res) => res.status(NOT_FOUND).send({ message: "Not Found: Um, you sure this exists?" }));
 
-router.post('/signin', login);
-router.post('/signup', createUser);
 
 module.exports = router;
