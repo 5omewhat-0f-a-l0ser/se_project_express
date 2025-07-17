@@ -1,17 +1,11 @@
 const bycrypt = require("bycryptjs");
 // const jwt = require("jsonwebtoken");
 const User = require("../models/users");
-const { DEFAULT, BAD_REQUEST, NOT_FOUND, CONFLICT, DUPLICATE, UNAUTHORIZED } = require("../utils/Errors");
+const { DEFAULT, BAD_REQUEST, NOT_FOUND, CONFLICT, DUPLICATE, UNAUTHORIZED,} = require("../utils/Errors");
 // Project 13
 const { JWT_SECRET } = require("../utils/config");
 
 // GET /users
-
-const getUsers = (req, res) => {
-  User.find({})
-  .then((users) => res.send(users))
- .catch(() => res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" }))
-};
 
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
@@ -76,12 +70,6 @@ const login = (req, res) => {
     console.error(`Error ${err.name} with the message ${err.message}`);
       if (err.message === "incorrect email or password") {
         return res.status(UNAUTHORIZED).send({message: "Incorrect email or password, please try again."});
-      }
-      if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: "Bad Request: Turns out, the server did not like that." });
-      }
-      if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: "Not Found: Boss, this user couldn't be found"});
       }
       if (err.name === DUPLICATE) {
         return res.status(CONFLICT).send({message: "Conflict: Hmm... Something's not right here..."})

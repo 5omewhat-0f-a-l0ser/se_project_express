@@ -5,6 +5,7 @@ const DEFAULT = 500;
 const CONFLICT = 409;
 const DUPLICATE = 11000;
 const UNAUTHORIZED = 401;
+const FORBIDDEN = 403;
 
 module.exports = {
   BAD_REQUEST,
@@ -12,5 +13,6 @@ module.exports = {
   DEFAULT,
   CONFLICT,
   DUPLICATE,
-  UNAUTHORIZED
+  UNAUTHORIZED,
+  FORBIDDEN
 }

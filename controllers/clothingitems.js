@@ -25,9 +25,9 @@ const createClothingItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
+        return res.status(BAD_REQUEST).send({ message: "Bad Request: Turns out, the server did not like that." });
       }
-      return res.status(DEFAULT).send({ message: err.message });
+      return res.status(DEFAULT).send({ message:"Internal Server Error: Are you sure you didn't break the server?"});
     });
 };
 // videos had us do an Update controller and I find out, we don't need it!?
@@ -43,7 +43,7 @@ const deleteClothingItem = (req, res) => {
       return res.status(NOT_FOUND).send({ message: "Not Found: Boss, this user couldn't be found"});
     }
    if (err.name === "CastError") {
-      return res.status(BAD_REQUEST).send({ message: err.message });
+      return res.status(BAD_REQUEST).send({ message: "Bad Request: Turns out, the server did not like that." });
     }
     return res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
   })
