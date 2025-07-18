@@ -1,6 +1,6 @@
 // project 13
 
-// const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
 const { UNAUTHORIZED } = require("../utils/Errors");
 

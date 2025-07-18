@@ -1,5 +1,5 @@
-const bycrypt = require("bycryptjs");
-// const jwt = require("jsonwebtoken");
+const bcrypt = require('bcryptjs');
+const jwt = require("jsonwebtoken");
 const User = require("../models/users");
 const { DEFAULT, BAD_REQUEST, NOT_FOUND, CONFLICT, DUPLICATE, UNAUTHORIZED,} = require("../utils/Errors");
 // Project 13
@@ -9,32 +9,33 @@ const { JWT_SECRET } = require("../utils/config");
 
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
-  // project 13
-  if (!email) {
-  return res.status(BAD_REQUEST).send({message: "missing email, please add one"})
-  }
-  if (!password) {
-    return res.status(BAD_REQUEST).send({message: "missing password, please add one"})
-  }
-User.findOne({ email }).select('+password')
- .then(()=> bycrypt.hash(password, 10))
-  .then((hash) => User.create({ name, avatar, email, password:hash }))
-  .then((user) => {
-    delete user.password;
-    res.status(201).send(user)
-  })
-  .catch((err) =>{
-    console.error(`Error ${err.name} with the message $:err.message`);
-    if (err.name === "ValidationError") {
-      return res.status(BAD_REQUEST).send({ message: "Bad Request: Turns out, the server did not like that." });
-    }
-    // project 13
-    if (err.name === DUPLICATE) {
-      return res.status(CONFLICT).send({message: "Conflict: Hmm... Something's not right here..."})
-    }
 
-    return res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
-  });
+  if (!email) {
+    return res.status(BAD_REQUEST).send({ message: "missing email, please add one" });
+  }
+
+  if (!password) {
+    return res.status(BAD_REQUEST).send({ message: "missing password, please add one" });
+  }
+
+  return User.findOne({ email }).select('+password')
+    .then(() => bcrypt.hash(password, 10))
+    .then((hash) => User.create({ name, avatar, email, password: hash }))
+    .then((user) => {
+      const userWithoutPassword = user.Object();
+      delete userWithoutPassword.password;
+      res.status(201).send(userWithoutPassword);
+    })
+    .catch((err) => {
+      console.error(`Error ${err.name} with the message: ${err.message}`);
+      if (err.name === "ValidationError") {
+        return res.status(BAD_REQUEST).send({ message: "Bad Request: Turns out, the server did not like that." });
+      }
+      if (err.name === DUPLICATE) {
+        return res.status(CONFLICT).send({ message: "Conflict: Hmm... Something's not right here..." });
+      }
+      return res.status(DEFAULT).send({ message: "Internal Server Error: Are you sure you didn't break the server?" });
+    });
 };
 
 const getCurrentUser = (req, res) => {
@@ -98,4 +99,4 @@ const updateUser = (req, res) => {
   });
 };
 
-module.exports = { getUsers, createUser, getCurrentUser, login, updateUser };
+module.exports = { createUser, getCurrentUser, login, updateUser };
