@@ -8,14 +8,9 @@ const {
   deleteClothingItem,
 } = require("../controllers/clothingitems");
 
-const {
-  likeItem,
-  dislikeItem
-} = require("../controllers/likes");
+const { likeItem, dislikeItem } = require("../controllers/likes");
 
-
-
-router.get("/", getClothingItems)
+router.get("/", getClothingItems);
 router.post("/", auth, createClothingItem);
 router.delete("/:itemId", auth, deleteClothingItem);
 router.put("/:itemId/likes", auth, likeItem);

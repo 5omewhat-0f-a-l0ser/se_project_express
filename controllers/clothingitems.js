@@ -10,13 +10,6 @@ const getClothingItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.status(200).send(items))
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        return res
-          .status(BAD_REQUEST)
-          .send({
-            message: "Bad Request: Turns out, the server did not like that.",
-          });
-      }
       return res
         .status(DEFAULT)
         .send({
