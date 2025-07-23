@@ -29,9 +29,7 @@ const createUser = (req, res) => {
       .send({ message: "missing password, please add one" });
   }
 
-  return User.findOne({ email })
-    .select("+password")
-    .then(() => bcrypt.hash(password, 10))
+  return User.then(() => bcrypt.hash(password, 10))
     .then((hash) => User.create({ name, avatar, email, password: hash }))
     .then((user) => {
       const userWithoutPassword = user.Object();
@@ -41,23 +39,19 @@ const createUser = (req, res) => {
     .catch((err) => {
       console.error(`Error ${err.name} with the message: ${err.message}`);
       if (err.name === "ValidationError") {
-        return res
-          .status(BAD_REQUEST)
-          .send({
-            message: "Bad Request: Turns out, the server did not like that.",
-          });
+        return res.status(BAD_REQUEST).send({
+          message: "Bad Request: Turns out, the server did not like that.",
+        });
       }
       if (err.name === DUPLICATE) {
         return res
           .status(CONFLICT)
           .send({ message: "Conflict: Hmm... Something's not right here..." });
       }
-      return res
-        .status(DEFAULT)
-        .send({
-          message:
-            "Internal Server Error: Are you sure you didn't break the server?",
-        });
+      return res.status(DEFAULT).send({
+        message:
+          "Internal Server Error: Are you sure you didn't break the server?",
+      });
     });
 };
 
@@ -68,23 +62,19 @@ const getCurrentUser = (req, res) => {
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === "CastError") {
-        return res
-          .status(BAD_REQUEST)
-          .send({
-            message: "Bad Request: Turns out, the server did not like that.",
-          });
+        return res.status(BAD_REQUEST).send({
+          message: "Bad Request: Turns out, the server did not like that.",
+        });
       }
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(NOT_FOUND)
           .send({ message: "Not Found: Boss, this user couldn't be found" });
       }
-      return res
-        .status(DEFAULT)
-        .send({
-          message:
-            "Internal Server Error: Are you sure you didn't break the server?",
-        });
+      return res.status(DEFAULT).send({
+        message:
+          "Internal Server Error: Are you sure you didn't break the server?",
+      });
     });
 };
 
@@ -115,12 +105,10 @@ const login = (req, res) => {
           .status(CONFLICT)
           .send({ message: "Conflict: Hmm... Something's not right here..." });
       }
-      return res
-        .status(DEFAULT)
-        .send({
-          message:
-            "Internal Server Error: Are you sure you didn't break the server?",
-        });
+      return res.status(DEFAULT).send({
+        message:
+          "Internal Server Error: Are you sure you didn't break the server?",
+      });
     });
 };
 
@@ -131,23 +119,19 @@ const updateUser = (req, res) => {
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === "ValidationError") {
-        return res
-          .status(BAD_REQUEST)
-          .send({
-            message: "Bad Request: Turns out, the server did not like that.",
-          });
+        return res.status(BAD_REQUEST).send({
+          message: "Bad Request: Turns out, the server did not like that.",
+        });
       }
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(NOT_FOUND)
           .send({ message: "Not Found: Boss, this user couldn't be found" });
       }
-      return res
-        .status(DEFAULT)
-        .send({
-          message:
-            "Internal Server Error: Are you sure you didn't break the server?",
-        });
+      return res.status(DEFAULT).send({
+        message:
+          "Internal Server Error: Are you sure you didn't break the server?",
+      });
     });
 };
 
