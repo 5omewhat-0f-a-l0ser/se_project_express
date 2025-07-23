@@ -1,6 +1,16 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 
+const {
+  DEFAULT,
+  BAD_REQUEST,
+  NOT_FOUND,
+  CONFLICT,
+  DUPLICATE,
+  UNAUTHORIZED,
+} = require("../utils/Errors");
+
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -39,15 +49,20 @@ const userSchema = new mongoose.Schema({
 userSchema.statics.findUserByCredentials =
 function findByCredentials(
   email,
-  password
+  password,
+  res
 ) {
   const user = this.findOne({ email }).select("+password");
   if (!user) {
-    throw new Error("Incorrect email or password");
+    return res
+          .status(BAD_REQUEST)
+          .send({ message: "No user exists by this email. Want to try another?" });
   }
   const matched = bcrypt.compare(password, user.password);
   if (!matched) {
-    throw new Error("Incorrect email or password");
+   return res
+      .status(BAD_REQUEST)
+      .send({ message: "Incorrect email, please try again" });
   }
   return user;
 };
