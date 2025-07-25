@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcryptjs");
 
 const {
-  DEFAULT,
   BAD_REQUEST,
   NOT_FOUND,
   CONFLICT,
@@ -47,22 +47,20 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.statics.findUserByCredentials =
-function findByCredentials(
+async function findByCredentials(
   email,
-  password,
-  res
+  password
 ) {
-  const user = this.findOne({ email }).select("+password");
+  const user = await this.findOne({ email }).select("+password");
+  console.log(user);
   if (!user) {
-    return res
-          .status(BAD_REQUEST)
-          .send({ message: "No user exists by this email. Want to try another?" });
+    return
+    throw new Error("Incorrect email, please try again");
   }
-  const matched = bcrypt.compare(password, user.password);
+  const matched = await bcrypt.compare(password, user.password);
   if (!matched) {
-   return res
-      .status(BAD_REQUEST)
-      .send({ message: "Incorrect email, please try again" });
+   return
+   throw new Error ("Incorrect email, please try again");
   }
   return user;
 };

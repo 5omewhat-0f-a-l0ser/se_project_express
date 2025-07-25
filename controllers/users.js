@@ -29,10 +29,10 @@ const createUser = (req, res) => {
       .send({ message: "missing password, please add one" });
   }
 
-  return User.then(() => bcrypt.hash(password, 10))
+  return bcrypt.hash(password, 10)
     .then((hash) => User.create({ name, avatar, email, password: hash }))
     .then((user) => {
-      const userWithoutPassword = user.Object();
+      const userWithoutPassword = user.toObject();
       delete userWithoutPassword.password;
       res.status(201).send(userWithoutPassword);
     })

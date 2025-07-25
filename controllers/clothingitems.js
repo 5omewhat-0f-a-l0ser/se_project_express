@@ -47,7 +47,7 @@ const createClothingItem = (req, res) => {
 const deleteClothingItem = (req, res) => {
   const { itemId } = req.params;
 
-  ClothingItem.findById(req.params, itemId)
+  ClothingItem.findById(req.params)
     .orFail()
     .then((item) => {
       if (!item) {
@@ -56,7 +56,9 @@ const deleteClothingItem = (req, res) => {
       if (item.owner.toString() !== req.user._id) {
         return res.status(FORBIDDEN).json({ message: "Access denied" });
       }
-      return ClothingItem.deleteOne({ _id: req.params.itemId });
+      return ClothingItem.deleteOne({ _id: req.params.itemId }).then(() => {
+        res.status(200).send({message:"Item dee=leted successfully"});
+      });
     })
     // Is that how I'm supossed to do this?
     .catch((err) => {
