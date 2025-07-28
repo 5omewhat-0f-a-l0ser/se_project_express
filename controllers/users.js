@@ -43,7 +43,7 @@ const createUser = (req, res) => {
           message: "Bad Request: Turns out, the server did not like that.",
         });
       }
-      if (err.name === DUPLICATE) {
+      if (err.code === DUPLICATE) {
         return res
           .status(CONFLICT)
           .send({ message: "Conflict: Hmm... Something's not right here..." });
@@ -95,15 +95,10 @@ const login = (req, res) => {
     })
     .catch((err) => {
       console.error(`Error ${err.name} with the message ${err.message}`);
-      if (err.message === "Incorrect email or password, please try again.") {
+      if (err.message === "Incorrect email, please try again.") {
         return res
           .status(UNAUTHORIZED)
           .send({ message: "Incorrect email or password, please try again." });
-      }
-      if (err.name === DUPLICATE) {
-        return res
-          .status(CONFLICT)
-          .send({ message: "Conflict: Hmm... Something's not right here..." });
       }
       return res.status(DEFAULT).send({
         message:
@@ -114,7 +109,7 @@ const login = (req, res) => {
 
 const updateUser = (req, res) => {
   const { name, avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, avatar }, { new: true })
+  User.findByIdAndUpdate(req.user._id, { name, avatar }, { new: true, runValidators: true })
     .orFail()
     .then((user) => res.status(200).send(user))
     .catch((err) => {
