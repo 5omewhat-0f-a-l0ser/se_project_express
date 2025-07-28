@@ -2,14 +2,6 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 
-const {
-  BAD_REQUEST,
-  NOT_FOUND,
-  CONFLICT,
-  DUPLICATE,
-  UNAUTHORIZED,
-} = require("../utils/Errors");
-
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -54,12 +46,10 @@ async function findByCredentials(
   const user = await this.findOne({ email }).select("+password");
   console.log(user);
   if (!user) {
-    return
     throw new Error("Incorrect email, please try again");
   }
   const matched = await bcrypt.compare(password, user.password);
   if (!matched) {
-   return
    throw new Error ("Incorrect email, please try again");
   }
   return user;

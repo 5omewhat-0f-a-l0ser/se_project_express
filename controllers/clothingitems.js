@@ -9,14 +9,12 @@ const {
 const getClothingItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.status(200).send(items))
-    .catch((err) => {
-      return res
+    .catch(() => res
         .status(DEFAULT)
         .send({
           message:
             "Internal Server Error: Are you sure you didn't break the server?",
-        });
-    });
+        }));
 };
 
 const createClothingItem = (req, res) => {
@@ -47,7 +45,7 @@ const createClothingItem = (req, res) => {
 const deleteClothingItem = (req, res) => {
   const { itemId } = req.params;
 
-  ClothingItem.findById(req.params)
+  ClothingItem.findById(itemId)
     .orFail()
     .then((item) => {
       if (!item) {
