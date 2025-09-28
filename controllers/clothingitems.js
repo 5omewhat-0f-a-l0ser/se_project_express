@@ -9,13 +9,15 @@ const {
 const getClothingItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.status(200).send(items))
-    .catch(() => res
-        .status(DEFAULT)
-        .send({
-          message:
-            "Internal Server Error: Are you sure you didn't break the server?",
-        }));
+    .catch((err) => {
+      console.error("getClothingItems error:", err);
+      res.status(DEFAULT).send({
+        message:
+          "Internal Server Error: Are you sure you didn't break the server?",
+      });
+    });
 };
+
 
 const createClothingItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;

@@ -3,41 +3,52 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    minlength: 2,
-    maxlength: 30,
-  },
-  avatar: {
-    type: String,
-    required: [true, "A valid URL is required."],
-    validate: {
-      validator(value) {
-        return validator.isURL(value);
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      minlength: 2,
+      maxlength: 30,
+    },
+    avatar: {
+      type: String,
+      validate: {
+        validator: (url) => validator.isURL(url),
+        message: "Please provide a valid URL",
       },
-      message: "Please enter a valid URL",
+    },
+    email: {
+      type: String,
+      unique: true,
+      required: [true, "Please provide a valid email"],
+      validate: {
+        validator: (value) => validator.isEmail(value),
+        message: "Please provide a valid email",
+      },
+    },
+    password: {
+      type: String,
+      required: true,
+      select: false, // important: password won’t be returned by default
     },
   },
-  // project 13
-  email: {
-    type: String,
-    unique: true,
-    required: [true, "Please provide a valid email"],
-    validate: {
-      validator(value) {
-        return validator.isEmail(value);
+  {
+    toJSON: {
+      transform(doc, ret) {
+        delete ret.password;
+        return ret;
       },
-      message: "Please provide a vaild email",
     },
-  },
-  password: {
-    type: String,
-    required: true,
-    select: false,
-  },
-});
+    toObject: {
+      transform(doc, ret) {
+        delete ret.password;
+        return ret;
+      },
+    },
+  }
+);
+
 
 userSchema.statics.findUserByCredentials =
 async function findByCredentials(
