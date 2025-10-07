@@ -5,7 +5,7 @@ const validateURL = (value, helpers) =>{
   if(validator.isURL(value)) {
     return value;
   }
-  return helpers.error("string.url");
+  return helpers.error("string.uri");
 }
 
 const clothingItemBodyValidation = celebrate({
@@ -71,7 +71,7 @@ const idValidation = celebrate({
   }),
 });
 
-const userInfoValidation = celebrate({
+const userUpdateValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30).messages({
       "string.empty": "Name is required",
@@ -90,5 +90,5 @@ module.exports = {
   userInfoBodyValidation,
   loginValidation,
   idValidation,
-  userInfoValidation,
+  userUpdateValidation,
 };
