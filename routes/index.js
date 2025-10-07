@@ -3,22 +3,21 @@ const router = require("express").Router();
 const userRouter = require("./users");
 
 const clothingRouter = require("./clothingitems");
+const NotFounrError = require("../errors/Error404");
 
 const { login, createUser } = require("../controllers/users");
+const { userInfoBodyValidation, loginValidation } = require("../middlewares/validation");
 
-const { NOT_FOUND } = require("../utils/Errors");
 
 router.use("/users", userRouter);
 
 router.use("/items", clothingRouter);
 
-router.post("/signin", login);
-router.post("/signup", createUser);
+router.post("/signin",loginValidation, login);
+router.post("/signup",userInfoBodyValidation, createUser);
 
-router.use((req, res) =>
-  res
-    .status(NOT_FOUND)
-    .send({ message: "Not Found: Um, you sure this exists?" })
+router.use((req, res, next) =>
+  next(new NotFoundError("Document not found"))
 );
 
 module.exports = router;
