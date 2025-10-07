@@ -1,20 +1,24 @@
 const ClothingItem = require("../models/clothingItems");
-const {
-  DEFAULT,
-  BAD_REQUEST,
-  NOT_FOUND,
-  FORBIDDEN,
-} = require("../utils/Errors");
+const BadRequestError = require("../errors/Error400");
+const NotFoundErrorError = require("../errors/Error404");
+const ForbiddenError = require("../errors/Error403");
+const InternalError = require("../errors/Error500");
+
+// const {
+//   DEFAULT,
+//   BAD_REQUEST,
+//   NOT_FOUND,
+//   FORBIDDEN,
+// } = require("../utils/Errors");
 
 const getClothingItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.status(200).send(items))
     .catch((err) => {
-      console.error("getClothingItems error:", err);
-      res.status(DEFAULT).send({
-        message:
-          "Internal Server Error: Are you sure you didn't break the server?",
-      });
+    console.error("getClothingItems error:", err);
+    if (err.statusCode) {
+      return res.status(err.statusCode).send({ message: err.message });
+    };
     });
 };
 
