@@ -13,3 +13,6 @@ node_modules
 .DS_Store
 .idea
 .vscode
+
+# No idea where to drop these, so here is a different section for that reason
+.env
