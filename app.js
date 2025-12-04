@@ -17,7 +17,7 @@ const app = express();
 const { PORT = 3001 } = process.env;
 
 const corsOptions = {
-  origin: "http://localhost:3000", // allow React dev server
+  origin: ["http://localhost:3000", "https://weatherapp.rainbowcup.com"], // allow React dev server
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
