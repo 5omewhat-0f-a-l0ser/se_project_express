@@ -1,5 +1,5 @@
-const NotFoundError = require("../errors/Error404");
 const router = require("express").Router();
+const NotFoundError = require("../errors/notfound-error");
 
 const userRouter = require("./users");
 

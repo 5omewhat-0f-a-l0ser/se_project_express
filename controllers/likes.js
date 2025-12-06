@@ -1,9 +1,7 @@
-const BadRequestError = require("../errors/Error400");
-const NotFoundError = require("../errors/Error404");
+const BadRequestError = require("../errors/badrequest-error");
+const NotFoundError = require("../errors/notfound-error");
 
 const ClothingItem = require("../models/clothingItems");
-const { DEFAULT, BAD_REQUEST, NOT_FOUND } = require("../utils/Errors");
-// const SuccessReturn = require("../utils/Status200");
 
 const likeItem = (req, res, next) => {
   ClothingItem.findByIdAndUpdate(

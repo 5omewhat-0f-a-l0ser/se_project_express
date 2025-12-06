@@ -36,14 +36,14 @@ const userSchema = new mongoose.Schema(
   {
     toJSON: {
       transform(doc, ret) {
-        delete ret.password;
-        return ret;
+        const { password: _, ...retWithoutPassword } = ret;
+        return retWithoutPassword;
       },
     },
     toObject: {
       transform(doc, ret) {
-        delete ret.password;
-        return ret;
+        const { password: _, ...retWithoutPassword } = ret;
+        return retWithoutPassword;
       },
     },
   }
