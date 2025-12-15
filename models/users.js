@@ -56,7 +56,6 @@ async function findByCredentials(
   password
 ) {
   const user = await this.findOne({ email }).select("+password");
-  console.log(user);
   if (!user) {
     throw new Error("Incorrect email, please try again");
   }
