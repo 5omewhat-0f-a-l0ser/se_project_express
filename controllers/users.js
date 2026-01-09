@@ -73,7 +73,7 @@ const login = (req, res, next) => {
     })
     .catch((err) => {
       console.error(`Error ${err.name} with the message ${err.message}`);
-      if (err.message === "Incorrect email, please try again.") {
+      if (err.message === "Incorrect email, please try again") {
         return next(new UnauthorizedError("Incorret email or password, please try again"));
       }
       return next(err);
